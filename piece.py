@@ -21,5 +21,5 @@ class Piece(object):
         self.libs = self.liberties
         return self.libs
 
-    def setLiberties(self,liberties): # set Liberties
+    def setLiberties(self, liberties): # set Liberties
         self.liberties = liberties

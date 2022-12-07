@@ -4,15 +4,16 @@ from PyQt6.QtGui import QPainter
 from PyQt6.QtTest import QTest
 from piece import Piece
 
+
 class Board(QFrame):  # base the board on a QFrame widget
-    updateTimerSignal = pyqtSignal(int) # signal sent when timer is updated
-    clickLocationSignal = pyqtSignal(str) # signal sent when there is a new click location
+    updateTimerSignal = pyqtSignal(int)  # signal sent when timer is updated
+    clickLocationSignal = pyqtSignal(str)  # signal sent when there is a new click location
 
     # TODO set the board width and height to be square
-    boardWidth  = 0     # board is 0 squares wide # TODO this needs updating
-    boardHeight = 0     #
-    timerSpeed  = 1000     # the timer updates every 1 millisecond
-    counter     = 10    # the number the counter will count down from
+    boardWidth = 7  # board is 0 squares wide # TODO this needs updating
+    boardHeight = 7  #
+    timerSpeed = 1000  # the timer updates every 1 millisecond
+    counter = 10  # the number the counter will count down from
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -21,11 +22,18 @@ class Board(QFrame):  # base the board on a QFrame widget
     def initBoard(self):
         '''initiates board'''
         self.timer = QBasicTimer()  # create a timer for the game
-        self.isStarted = False      # game is not currently started
-        self.start()                # start the game which will start the timer
+        self.isStarted = False  # game is not currently started
+        self.start()  # start the game which will start the timer
 
-        self.boardArray =[]         # TODO - create a 2d int/Piece array to store the state of the game
-        # self.printBoardArray()    # TODO - uncomment this method after creating the array above
+        # board 7x7
+        self.boardArray = [[0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0]]  # TODO - create a 2d int/Piece array to store the state of the game
+        self.printBoardArray()  # TODO - uncomment this method after creating the array above
 
     def printBoardArray(self):
         '''prints the boardArray in an attractive way'''
@@ -45,9 +53,9 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def start(self):
         '''starts game'''
-        self.isStarted = True                       # set the boolean which determines if the game has started to TRUE
-        self.resetGame()                            # reset the game
-        self.timer.start(self.timerSpeed, self)     # start the timer with the correct speed
+        self.isStarted = True  # set the boolean which determines if the game has started to TRUE
+        self.resetGame()  # reset the game
+        self.timer.start(self.timerSpeed, self)  # start the timer with the correct speed
         print("start () - timer is started")
 
     def timerEvent(self, event):
@@ -60,19 +68,20 @@ class Board(QFrame):  # base the board on a QFrame widget
             print('timerEvent()', self.counter)
             self.updateTimerSignal.emit(self.counter)
         else:
-            super(Board, self).timerEvent(event)      # if we do not handle an event we should pass it to the super
-                                                        # class for handling
+            super(Board, self).timerEvent(event)  # if we do not handle an event we should pass it to the super
+            # class for handling
 
     def paintEvent(self, event):
         '''paints the board and the pieces of the game'''
-        # painter = QPainter(self)
-        # self.drawBoardSquares(painter)
+        painter = QPainter(self)
+        self.drawBoardSquares(painter)
         # self.drawPieces(painter)
 
     def mousePressEvent(self, event):
         '''this event is automatically called when the mouse is pressed'''
-        clickLoc = "click location ["+str(event.position().x())+","+str(event.position().y())+"]"     # the location where a mouse click was registered
-        print("mousePressEvent() - "+clickLoc)
+        clickLoc = "click location [" + str(event.position().x()) + "," + str(
+            event.position().y()) + "]"  # the location where a mouse click was registered
+        print("mousePressEvent() - " + clickLoc)
         # TODO you could call some game logic here
         self.clickLocationSignal.emit(clickLoc)
 
@@ -86,27 +95,35 @@ class Board(QFrame):  # base the board on a QFrame widget
     def drawBoardSquares(self, painter):
         '''draw all the square on the board'''
         # TODO set the default colour of the brush
+        painter.setBrush(Qt.GlobalColor.darkYellow)
         for row in range(0, Board.boardHeight):
-            for col in range (0, Board.boardWidth):
+            for col in range(0, Board.boardWidth):
                 painter.save()
-                colTransformation = self.squareWidth()* col # TODO set this value equal the transformation in the column direction
-                rowTransformation = 0                       # TODO set this value equal the transformation in the row direction
-                painter.translate(colTransformation,rowTransformation)
-                painter.fillRect()                          # TODO provide the required arguments
+                colTransformation = self.squareWidth() * col  # TODO set this value equal the transformation in the column direction
+                rowTransformation = self.squareHeight() * row  # TODO set this value equal the transformation in the row direction
+                painter.translate(colTransformation, rowTransformation)
+                painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()), painter.brush())  # TODO provide the required arguments
                 painter.restore()
+                if painter.brush() == Qt.GlobalColor.darkYellow:
+                    painter.setBrush(Qt.GlobalColor.black)
+                else:
+                    painter.setBrush(Qt.GlobalColor.darkYellow)
+
                 # TODO change the colour of the brush so that a checkered board is drawn
 
-    def drawPieces(self, painter):
-        '''draw the prices on the board'''
-        colour = Qt.GlobalColor.transparent # empty square could be modeled with transparent pieces
-        for row in range(0, len(self.boardArray)):
-            for col in range(0, len(self.boardArray[0])):
-                painter.save()
-                painter.translate()
 
-                # TODO draw some the pieces as ellipses
-                # TODO choose your colour and set the painter brush to the correct colour
-                radius = self.squareWidth() / 4
-                center = QPointF(radius, radius)
-                painter.drawEllipse(center, radius, radius)
-                painter.restore()
+    # def drawPieces(self, painter):
+    #     '''draw the prices on the board'''
+    #     colour = Qt.GlobalColor.transparent  # empty square could be modeled with transparent pieces
+    #     for row in range(0, len(self.boardArray)):
+    #         for col in range(0, len(self.boardArray[0])):
+    #             painter.save()
+                # x and y position,
+    #             painter.translate()
+    #
+    #             # TODO draw some the pieces as ellipses
+    #             # TODO choose your colour and set the painter brush to the correct colour
+    #             radius = self.squareWidth() / 4
+    #             center = QPointF(radius, radius)
+    #             painter.drawEllipse(center, radius, radius)
+    #             painter.restore()
