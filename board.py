@@ -1,7 +1,8 @@
-from PyQt6.QtWidgets import QFrame
+from PyQt6.QtWidgets import QFrame, QLabel, QGridLayout, QPushButton
 from PyQt6.QtCore import Qt, QBasicTimer, pyqtSignal, QPointF
-from PyQt6.QtGui import QPainter
+from PyQt6.QtGui import QPainter, QPen, QIcon
 from PyQt6.QtTest import QTest
+
 from piece import Piece
 
 
@@ -25,20 +26,35 @@ class Board(QFrame):  # base the board on a QFrame widget
         self.isStarted = False  # game is not currently started
         self.start()  # start the game which will start the timer
 
-        # board 7x7
-        self.boardArray = [[0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0]]  # TODO - create a 2d int/Piece array to store the state of the game
+        self.piece = Piece(0, 0, 0)
+        # board 7x7 has 8x8 pieces positions on it
+        # TODO - create a 2d int/Piece array to store the state of the game
+        # initializing array
+        self.boardArray = [[self.piece for cell in range(8)]for row in range(8)]
         self.printBoardArray()  # TODO - uncomment this method after creating the array above
+
+        self.grid = QGridLayout()
+
+        for row in range(0, len(self.boardArray)):
+            for col in range(0, len(self.boardArray[0])):
+                piece1 = Piece(0, row, col)
+                self.grid.addWidget(piece1, row, col)  # adding piece to the equivalent position in the grid
+                self.boardArray[row][col] = piece1  # adding piece to the right position
+
+        # add layout with right pieces
+        self.setLayout(self.grid)
+        # print board again to check if pieces are in right based on its x and y
+        self.printBoardArray()
 
     def printBoardArray(self):
         '''prints the boardArray in an attractive way'''
+        # print value of piece (0, 1 or 2)
         print("boardArray:")
-        print('\n'.join(['\t'.join([str(cell) for cell in row]) for row in self.boardArray]))
+        print('\n'.join(['\t'.join([str(cell.getPiece()) for cell in row]) for row in self.boardArray]))
+
+        # printing x and y of each piece (it index)
+        print("boardArray x and y:")
+        print('\n'.join(['\t'.join([str(cell.get_x_and_y()) for cell in row]) for row in self.boardArray]))
 
     def mousePosToColRow(self, event):
         '''convert the mouse click event to a row and column'''
@@ -64,9 +80,9 @@ class Board(QFrame):  # base the board on a QFrame widget
         if event.timerId() == self.timer.timerId():  # if the timer that has 'ticked' is the one in this class
             if Board.counter == 0:
                 print("Game over")
-            self.counter -= 1
-            print('timerEvent()', self.counter)
-            self.updateTimerSignal.emit(self.counter)
+            # self.counter -= 1
+            # print('timerEvent()', self.counter)
+            # self.updateTimerSignal.emit(self.counter)
         else:
             super(Board, self).timerEvent(event)  # if we do not handle an event we should pass it to the super
             # class for handling
@@ -92,9 +108,11 @@ class Board(QFrame):  # base the board on a QFrame widget
     def tryMove(self, newX, newY):
         '''tries to move a piece'''
 
+    # drawBoardSaqueres will be changed
     def drawBoardSquares(self, painter):
         '''draw all the square on the board'''
         # TODO set the default colour of the brush
+        # painter.setPen(QPen(Qt.GlobalColor.black, 1, Qt.PenStyle.SolidLine))  will be used to do a the board in a different way
         painter.setBrush(Qt.GlobalColor.darkYellow)
         for row in range(0, Board.boardHeight):
             for col in range(0, Board.boardWidth):
@@ -102,7 +120,8 @@ class Board(QFrame):  # base the board on a QFrame widget
                 colTransformation = self.squareWidth() * col  # TODO set this value equal the transformation in the column direction
                 rowTransformation = self.squareHeight() * row  # TODO set this value equal the transformation in the row direction
                 painter.translate(colTransformation, rowTransformation)
-                painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()), painter.brush())  # TODO provide the required arguments
+                painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()),
+                                 painter.brush(), )  # TODO provide the required arguments
                 painter.restore()
                 if painter.brush() == Qt.GlobalColor.darkYellow:
                     painter.setBrush(Qt.GlobalColor.black)
@@ -111,14 +130,14 @@ class Board(QFrame):  # base the board on a QFrame widget
 
                 # TODO change the colour of the brush so that a checkered board is drawn
 
-
+    #  Probably will be deleted as grid take care of this job
     # def drawPieces(self, painter):
     #     '''draw the prices on the board'''
     #     colour = Qt.GlobalColor.transparent  # empty square could be modeled with transparent pieces
     #     for row in range(0, len(self.boardArray)):
     #         for col in range(0, len(self.boardArray[0])):
     #             painter.save()
-                # x and y position,
+    # x and y position,
     #             painter.translate()
     #
     #             # TODO draw some the pieces as ellipses
@@ -127,3 +146,5 @@ class Board(QFrame):  # base the board on a QFrame widget
     #             center = QPointF(radius, radius)
     #             painter.drawEllipse(center, radius, radius)
     #             painter.restore()
+
+    # def place_piece(self):
