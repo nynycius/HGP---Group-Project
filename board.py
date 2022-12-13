@@ -43,7 +43,7 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         # add layout with right pieces
         self.setLayout(self.grid)
-        # print board again to check if pieces are in right based on its x and y
+        # print board again to check if pieces are right based on its x and y
         self.printBoardArray()
 
     def printBoardArray(self):
@@ -100,6 +100,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         print("mousePressEvent() - " + clickLoc)
         # TODO you could call some game logic here
         self.clickLocationSignal.emit(clickLoc)
+        self.printBoardArray()
 
     def resetGame(self):
         '''clears pieces from the board'''

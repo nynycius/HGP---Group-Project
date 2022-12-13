@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon, QColor
-from PyQt6.QtWidgets import QPushButton
+from PyQt6.QtWidgets import QPushButton, QSizePolicy, QApplication
 
 
 # TODO: Add more functions as needed for your Pieces
@@ -19,8 +19,9 @@ class Piece(QPushButton):
         self.liberties = 0  # starting with 0 liberty as default, must set right liberty when placed
         self.x = x
         self.y = y
-        self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px;")  # background and border transparent
-        self.setIcon(QIcon("./icons/white.png"))
+        #  comment out the next line to see button border
+        # self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px;")  # background and border transparent
+        self.setIcon(QIcon("./icons/white.png"))  # must be changed to blank.png
         self.setIconSize(QSize(75, 75))
         self.pressed.connect(self.piece_color)
 
