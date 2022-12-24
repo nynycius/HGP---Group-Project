@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon, QColor
-from PyQt6.QtWidgets import QPushButton
+from PyQt6.QtWidgets import QPushButton, QSizePolicy, QApplication
 
 
 # TODO: Add more functions as needed for your Pieces
@@ -19,9 +19,10 @@ class Piece(QPushButton):
         self.liberties = 0  # starting with 0 liberty as default, must set right liberty when placed
         self.x = x
         self.y = y
-        self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px;")  # background and border transparent
-        self.setIcon(QIcon("./icons/white.png"))
-        self.setIconSize(QSize(75, 75))
+        #  comment out the next line to see button border
+        # self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px; padding: 0px")  # background and border transparent
+        self.setIcon(QIcon("./icons/white.png"))  # must be changed to blank.png
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.pressed.connect(self.piece_color)
 
     # Small test to change the icons, must be changed based on players turn if Status == 0 (blank) only
@@ -59,4 +60,7 @@ class Piece(QPushButton):
     def get_x_and_y(self):
         return self.x, self.y
 
+    def resizeEvent(self, event):
+
+        self.setIconSize(QSize(self.height(), self.width()))
 

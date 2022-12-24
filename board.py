@@ -1,10 +1,10 @@
-from PyQt6.QtWidgets import QFrame, QLabel, QGridLayout, QPushButton
-from PyQt6.QtCore import Qt, QBasicTimer, pyqtSignal, QPointF
+from PyQt6.QtWidgets import QFrame, QLabel, QGridLayout, QPushButton, QSizePolicy, QApplication
+from PyQt6.QtCore import Qt, QBasicTimer, pyqtSignal, QPointF, QSize
 from PyQt6.QtGui import QPainter, QPen, QIcon
-from PyQt6.QtTest import QTest
+from PyQt6.uic.properties import QtGui
+from PyQt6.uic.uiparser import QtWidgets
 
 from piece import Piece
-
 
 class Board(QFrame):  # base the board on a QFrame widget
     updateTimerSignal = pyqtSignal(int)  # signal sent when timer is updated
@@ -18,6 +18,9 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def __init__(self, parent):
         super().__init__(parent)
+
+        #  parent is go, board is declared in go file using self as parameter
+        self.go = parent
         self.initBoard()
 
     def initBoard(self):
@@ -31,19 +34,20 @@ class Board(QFrame):  # base the board on a QFrame widget
         # TODO - create a 2d int/Piece array to store the state of the game
         # initializing array
         self.boardArray = [[self.piece for cell in range(8)]for row in range(8)]
-        self.printBoardArray()  # TODO - uncomment this method after creating the array above
+        self.printBoardArray()
 
         self.grid = QGridLayout()
-
         for row in range(0, len(self.boardArray)):
             for col in range(0, len(self.boardArray[0])):
                 piece1 = Piece(0, row, col)
+                # piece1.setSizePolicy(QSizePolicy.Polic)
                 self.grid.addWidget(piece1, row, col)  # adding piece to the equivalent position in the grid
                 self.boardArray[row][col] = piece1  # adding piece to the right position
 
+
         # add layout with right pieces
         self.setLayout(self.grid)
-        # print board again to check if pieces are in right based on its x and y
+        # print board again to check if pieces are right based on its x and y
         self.printBoardArray()
 
     def printBoardArray(self):
@@ -100,6 +104,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         print("mousePressEvent() - " + clickLoc)
         # TODO you could call some game logic here
         self.clickLocationSignal.emit(clickLoc)
+        self.printBoardArray()
 
     def resetGame(self):
         '''clears pieces from the board'''
@@ -113,6 +118,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         '''draw all the square on the board'''
         # TODO set the default colour of the brush
         # painter.setPen(QPen(Qt.GlobalColor.black, 1, Qt.PenStyle.SolidLine))  will be used to do a the board in a different way
+
         painter.setBrush(Qt.GlobalColor.darkYellow)
         for row in range(0, Board.boardHeight):
             for col in range(0, Board.boardWidth):
@@ -120,8 +126,12 @@ class Board(QFrame):  # base the board on a QFrame widget
                 colTransformation = self.squareWidth() * col  # TODO set this value equal the transformation in the column direction
                 rowTransformation = self.squareHeight() * row  # TODO set this value equal the transformation in the row direction
                 painter.translate(colTransformation, rowTransformation)
+                # if col == 0:
+                #     painter.setBrush(Qt.GlobalColor.blue)
+                #     painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()),
+                #                      painter.brush())
                 painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()),
-                                 painter.brush(), )  # TODO provide the required arguments
+                                 painter.brush())  # TODO provide the required arguments
                 painter.restore()
                 if painter.brush() == Qt.GlobalColor.darkYellow:
                     painter.setBrush(Qt.GlobalColor.black)
@@ -147,4 +157,18 @@ class Board(QFrame):  # base the board on a QFrame widget
     #             painter.drawEllipse(center, radius, radius)
     #             painter.restore()
 
-    # def place_piece(self):
+    def resizeEvent(self, event):
+
+        print(f"height: {self.height()}, wight: {self.width()}")
+        print(f"Butom height: {self.piece.height()}, wight: {self.piece.width()}")
+
+        # self.setFixedSize(self.go.width(), self.go.height())
+
+        # self.update()
+
+        # top = 200 - self.squareHeight()/2
+
+        # self.grid.setContentsMargins(20, top, 20, 20)
+
+
+
