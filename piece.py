@@ -20,9 +20,9 @@ class Piece(QPushButton):
         self.x = x
         self.y = y
         #  comment out the next line to see button border
-        # self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px;")  # background and border transparent
+        # self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px; padding: 0px")  # background and border transparent
         self.setIcon(QIcon("./icons/white.png"))  # must be changed to blank.png
-        self.setIconSize(QSize(75, 75))
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.pressed.connect(self.piece_color)
 
     # Small test to change the icons, must be changed based on players turn if Status == 0 (blank) only
@@ -60,4 +60,7 @@ class Piece(QPushButton):
     def get_x_and_y(self):
         return self.x, self.y
 
+    def resizeEvent(self, event):
+
+        self.setIconSize(QSize(self.height(), self.width()))
 
