@@ -1,35 +1,43 @@
-from PyQt6.QtWidgets import QDockWidget, QVBoxLayout, QWidget, QLabel #TODO import additional Widget classes as desired
+from PyQt6.QtWidgets import QDockWidget, QVBoxLayout, QWidget, \
+    QLabel  # TODO import additional Widget classes as desired
 from PyQt6.QtCore import pyqtSlot
+
 
 class ScoreBoard(QDockWidget):
     '''# base the score_board on a QDockWidget'''
 
 
-
-    # blackpieceScore
-    # whiteScore.
-    # get
-    # set
-
-
     def __init__(self):
         super().__init__()
+        self.blackScore = 0
+        self.whiteScore = 0
+        self.turn = ""
         self.initUI()
 
     def initUI(self):
         '''initiates ScoreBoard UI'''
-        self.resize(200, 200)
+        self.setMinimumSize(250, self.height())
         self.center()
         self.setWindowTitle('ScoreBoard')
 
-        #create a widget to hold other widgets
+        # create a widget to hold other widgets
         self.mainWidget = QWidget()
         self.mainLayout = QVBoxLayout()
 
-        #create two labels which will be updated by signals
+        # create two labels which will be updated by signals
+        self.label_turn = QLabel()
+        self.label_pl1_score = QLabel()
+        self.label_pl2_score = QLabel()
+
         self.label_clickLocation = QLabel("Click Location: ")
         self.label_timeRemaining = QLabel("Time remaining: ")
         self.mainWidget.setLayout(self.mainLayout)
+        self.mainLayout.addWidget(QLabel("Turn: "))
+        self.mainLayout.addWidget(self.label_turn)
+        self.mainLayout.addWidget(QLabel("Player One's Score: "))
+        self.mainLayout.addWidget(self.label_pl1_score)
+        self.mainLayout.addWidget(QLabel("Player Two's Score: "))
+        self.mainLayout.addWidget(self.label_pl2_score)
         self.mainLayout.addWidget(self.label_clickLocation)
         self.mainLayout.addWidget(self.label_timeRemaining)
         self.setWidget(self.mainWidget)
@@ -45,7 +53,7 @@ class ScoreBoard(QDockWidget):
         # when the updateTimerSignal is emitted in the board the setTimeRemaining slot receives it
         board.updateTimerSignal.connect(self.setTimeRemaining)
 
-    @pyqtSlot(str) # checks to make sure that the following slot is receiving an argument of the type 'int'
+    @pyqtSlot(str)  # checks to make sure that the following slot is receiving an argument of the type 'int'
     def setClickLocation(self, clickLoc):
         '''updates the label to show the click location'''
         self.label_clickLocation.setText("Click Location:" + clickLoc)
@@ -56,6 +64,19 @@ class ScoreBoard(QDockWidget):
         '''updates the time remaining label to show the time remaining'''
         update = "Time Remaining:" + str(timeRemainng)
         self.label_timeRemaining.setText(update)
-        print('slot '+update)
+        print('slot ' + update)
         # self.redraw()
 
+    def getBlackScore(self):
+        return self.blackScore
+
+    def setBlackScore(self, score):
+        self.blackScore = score
+        self.label_pl1_score.setText(str(self.blackScore))
+
+    def getWhteScore(self):
+        return self.whiteScore
+
+    def setWhtieScore(self, score):
+        self.whiteScore = score
+        self.label_pl1_score.setText(str(self.whiteScore))
