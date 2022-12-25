@@ -65,11 +65,12 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def squareWidth(self):
         '''returns the width of one square in the board'''
-        return self.contentsRect().width() / self.boardWidth
+        # return as int to make work easier with the other methods
+        return int(self.contentsRect().width() / self.boardWidth + 1)
 
     def squareHeight(self):
         '''returns the height of one square of the board'''
-        return self.contentsRect().height() / self.boardHeight
+        return int(self.contentsRect().height() / self.boardHeight + 1)
 
     def start(self):
         '''starts game'''
@@ -117,58 +118,65 @@ class Board(QFrame):  # base the board on a QFrame widget
     def drawBoardSquares(self, painter):
         '''draw all the square on the board'''
         # TODO set the default colour of the brush
-        # painter.setPen(QPen(Qt.GlobalColor.black, 1, Qt.PenStyle.SolidLine))  will be used to do a the board in a different way
 
-        painter.setBrush(Qt.GlobalColor.darkYellow)
-        for row in range(0, Board.boardHeight):
-            for col in range(0, Board.boardWidth):
-                painter.save()
-                colTransformation = self.squareWidth() * col  # TODO set this value equal the transformation in the column direction
-                rowTransformation = self.squareHeight() * row  # TODO set this value equal the transformation in the row direction
-                painter.translate(colTransformation, rowTransformation)
-                # if col == 0:
-                #     painter.setBrush(Qt.GlobalColor.blue)
-                #     painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()),
-                #                      painter.brush())
-                painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()),
-                                 painter.brush())  # TODO provide the required arguments
-                painter.restore()
-                if painter.brush() == Qt.GlobalColor.darkYellow:
-                    painter.setBrush(Qt.GlobalColor.black)
-                else:
-                    painter.setBrush(Qt.GlobalColor.darkYellow)
+        painter.setPen(QPen(Qt.GlobalColor.black, 3, Qt.PenStyle.SolidLine))
 
-                # TODO change the colour of the brush so that a checkered board is drawn
+        #  take the square size to calculate drawn position
+        square_size = self.squareWidth()
+        initial_position = square_size
+        final_position = square_size * self.boardWidth
 
-    #  Probably will be deleted as grid take care of this job
-    # def drawPieces(self, painter):
-    #     '''draw the prices on the board'''
-    #     colour = Qt.GlobalColor.transparent  # empty square could be modeled with transparent pieces
-    #     for row in range(0, len(self.boardArray)):
-    #         for col in range(0, len(self.boardArray[0])):
-    #             painter.save()
-    # x and y position,
-    #             painter.translate()
-    #
-    #             # TODO draw some the pieces as ellipses
-    #             # TODO choose your colour and set the painter brush to the correct colour
-    #             radius = self.squareWidth() / 4
-    #             center = QPointF(radius, radius)
-    #             painter.drawEllipse(center, radius, radius)
-    #             painter.restore()
+        for i in range(1, self.boardWidth + 1):
+
+            # determine the position of the line
+            position = square_size * i
+
+            #  row
+            painter.drawLine(initial_position, position, final_position, position)
+            #  colum
+            painter.drawLine(position, initial_position, position, final_position)
+
+
+        # painter.setBrush(Qt.GlobalColor.darkYellow)
+        # for row in range(0, Board.boardHeight):
+        #     for col in range(0, Board.boardWidth):
+        #         painter.save()
+        #         colTransformation = self.squareWidth() * col  # TODO set this value equal the transformation in the column direction
+        #         rowTransformation = self.squareHeight() * row  # TODO set this value equal the transformation in the row direction
+        #         painter.translate(colTransformation, rowTransformation)
+        #         # if col == 0:
+        #         #     painter.setBrush(Qt.GlobalColor.blue)
+        #         #     painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()),
+        #         #                      painter.brush())
+        #         painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()),
+        #                          painter.brush())
+        #
+        #         painter.restore()
+        #         if painter.brush() == Qt.GlobalColor.darkYellow:
+        #             painter.setBrush(Qt.GlobalColor.black)
+        #         else:
+        #             painter.setBrush(Qt.GlobalColor.darkYellow)
+
+
 
     def resizeEvent(self, event):
 
         print(f"height: {self.height()}, wight: {self.width()}")
         print(f"Butom height: {self.piece.height()}, wight: {self.piece.width()}")
+        self.setFixedWidth(self.go.height())
 
-        # self.setFixedSize(self.go.width(), self.go.height())
+        top = int(self.squareHeight() * 0.25)
+        bottom = int(self.squareWidth() * 0.25)
+        left = int(self.squareHeight() * 0.25)
+        right = int(self.squareWidth() * 0.25)
+
+        self.grid.setContentsMargins(left, top, right, bottom)
 
         # self.update()
 
         # top = 200 - self.squareHeight()/2
 
-        # self.grid.setContentsMargins(20, top, 20, 20)
+
 
 
 
