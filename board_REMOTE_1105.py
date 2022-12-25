@@ -34,13 +34,8 @@ class Board(QFrame):  # base the board on a QFrame widget
         # board 7x7 has 6x6 squares
         # TODO - create a 2d int/Piece array to store the state of the game
         # initializing array
-<<<<<<< HEAD
-        self.boardArray = [[self.piece for cell in range(8)]for row in range(8)]
-       # self.printBoardArray()
-=======
         self.boardArray = [[self.piece for cell in range(self.boardWidth)]for row in range(self.boardHeight)]
         self.printBoardArray()
->>>>>>> 54dc38efff70c8075d58f81e409720057bf97d2e
 
         self.grid = QGridLayout()
         for row in range(0, len(self.boardArray)):

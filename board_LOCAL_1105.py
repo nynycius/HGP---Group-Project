@@ -21,7 +21,6 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         #  parent is go, board is declared in go file using self as parameter
         self.go = parent
-
         self.initBoard()
 
     def initBoard(self):
@@ -31,23 +30,20 @@ class Board(QFrame):  # base the board on a QFrame widget
         self.start()  # start the game which will start the timer
 
         self.piece = Piece(0, 0, 0)
-        # board 7x7 has 6x6 squares
+        # board 7x7 has 8x8 pieces positions on it
         # TODO - create a 2d int/Piece array to store the state of the game
         # initializing array
-<<<<<<< HEAD
         self.boardArray = [[self.piece for cell in range(8)]for row in range(8)]
        # self.printBoardArray()
-=======
-        self.boardArray = [[self.piece for cell in range(self.boardWidth)]for row in range(self.boardHeight)]
-        self.printBoardArray()
->>>>>>> 54dc38efff70c8075d58f81e409720057bf97d2e
 
         self.grid = QGridLayout()
         for row in range(0, len(self.boardArray)):
             for col in range(0, len(self.boardArray[0])):
                 piece1 = Piece(0, row, col)
+                # piece1.setSizePolicy(QSizePolicy.Polic)
                 self.grid.addWidget(piece1, row, col)  # adding piece to the equivalent position in the grid
                 self.boardArray[row][col] = piece1  # adding piece to the right position
+
 
         # add layout with right pieces
         self.setLayout(self.grid)
@@ -128,7 +124,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         #  take the square size to calculate drawn position
         square_size = self.squareWidth()
         initial_position = square_size
-        final_position = square_size * 10
+        final_position = square_size * self.boardWidth
 
         for i in range(1, self.boardWidth + 1):
 

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 from PyQt6.QtCore import Qt
 from board import Board
 from score_board import ScoreBoard
@@ -17,15 +17,6 @@ class Go(QMainWindow):
 
     def initUI(self):
         '''initiates application UI'''
-<<<<<<< HEAD
-        self.board = Board(self)
-        self.setCentralWidget(self.board)
-        self.scoreBoard = ScoreBoard()
-        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.scoreBoard)
-        self.scoreBoard.make_connection(self.board)
-
-        self.resize(800, 800)
-=======
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -48,7 +39,6 @@ class Go(QMainWindow):
         #  min size is half of screeen size
         self.setMinimumSize(int(screen.width() * 0.5), int(screen.height() * 0.5))
 
->>>>>>> 54dc38efff70c8075d58f81e409720057bf97d2e
         self.center()
         self.setWindowTitle('Go')
         self.show()
@@ -60,5 +50,5 @@ class Go(QMainWindow):
 
         gr.moveCenter(screen)
         self.move(gr.topLeft())
-        #size = self.geometry()
-        #self.move((screen.width() - size.width()) / 2,(screen.height() - size.height()) / 2)
+        # size = self.geometry()
+        # self.move((screen.width() - size.width()) / 2,(screen.height() - size.height()) / 2)
