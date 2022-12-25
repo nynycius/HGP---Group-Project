@@ -23,12 +23,7 @@ class Go(QMainWindow):
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.scoreBoard)
         self.scoreBoard.make_connection(self.board)
 
-        # set min siz based on screen size
-        screen = self.screen().availableGeometry()
-
-        #  min size is half of screeen size
-        self.setMinimumSize(int(screen.width() * 0.5), int(screen.height() * 0.5))
-
+        self.resize(800, 800)
         self.center()
         self.setWindowTitle('Go')
         self.show()
@@ -40,5 +35,5 @@ class Go(QMainWindow):
 
         gr.moveCenter(screen)
         self.move(gr.topLeft())
-        # size = self.geometry()
-        # self.move((screen.width() - size.width()) / 2,(screen.height() - size.height()) / 2)
+        #size = self.geometry()
+        #self.move((screen.width() - size.width()) / 2,(screen.height() - size.height()) / 2)
