@@ -25,9 +25,9 @@ class ScoreBoard(QDockWidget):
         self.mainLayout = QVBoxLayout()
 
         # create two labels which will be updated by signals
-        self.label_turn = QLabel()
-        self.label_pl1_score = QLabel()
-        self.label_pl2_score = QLabel()
+        self.label_turn = QLabel("Player1")
+        self.label_pl1_score = QLabel("0")
+        self.label_pl2_score = QLabel("0")
 
         self.label_clickLocation = QLabel("Click Location: ")
         self.label_timeRemaining = QLabel("Time remaining: ")
@@ -79,4 +79,4 @@ class ScoreBoard(QDockWidget):
 
     def setWhtieScore(self, score):
         self.whiteScore = score
-        self.label_pl1_score.setText(str(self.whiteScore))
+        self.label_pl2_score.setText(str(self.whiteScore))
