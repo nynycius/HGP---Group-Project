@@ -4,6 +4,14 @@ from PyQt6.QtCore import pyqtSlot
 class ScoreBoard(QDockWidget):
     '''# base the score_board on a QDockWidget'''
 
+
+
+    # blackpieceScore
+    # whiteScore.
+    # get
+    # set
+
+
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -13,6 +21,7 @@ class ScoreBoard(QDockWidget):
         self.resize(200, 200)
         self.center()
         self.setWindowTitle('ScoreBoard')
+
         #create a widget to hold other widgets
         self.mainWidget = QWidget()
         self.mainLayout = QVBoxLayout()

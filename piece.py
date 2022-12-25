@@ -8,8 +8,8 @@ class Piece(QPushButton):
     NoPiece = 0
     White = 1
     Black = 2
-    Status = 0 #default to nopiece
-    liberties = 0 #default no liberties
+    Status = 0 # default to nopiece
+    liberties = 0 # default no liberties
     x = -1
     y = -1
 
@@ -20,7 +20,7 @@ class Piece(QPushButton):
         self.x = x
         self.y = y
         #  comment out the next line to see button border
-        # self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px; padding: 0px")  # background and border transparent
+        self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px; padding: 0px")  # background and border transparent
         self.setIcon(QIcon("./icons/white.png"))  # must be changed to blank.png
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.pressed.connect(self.piece_color)
