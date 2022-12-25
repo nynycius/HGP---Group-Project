@@ -18,20 +18,20 @@ class Go(QMainWindow):
     def initUI(self):
         '''initiates application UI'''
 
-        # central_widget = QWidget()
-        # self.setCentralWidget(central_widget)
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
 
         self.board = Board(self)
         self.scoreBoard = ScoreBoard()
-        self.setCentralWidget(self.board)
+        # self.setCentralWidget(self.board)
 
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.scoreBoard)
         self.scoreBoard.make_connection(self.board)
 
         #  TODO maybe not necessary, setting scoreBoard and board inside a main layout
-        # central_widget_layout = QHBoxLayout(central_widget)
-        # central_widget_layout.addWidget(self.board)
-        # central_widget_layout.addWidget(self.scoreBoard)
+        central_widget_layout = QHBoxLayout(central_widget)
+        central_widget_layout.addWidget(self.board, 9)
+        central_widget_layout.addWidget(self.scoreBoard, 2)
 
         # set min siz based on screen size
         screen = self.screen().availableGeometry()
