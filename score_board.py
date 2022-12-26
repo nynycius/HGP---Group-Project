@@ -16,10 +16,11 @@ class ScoreBoard(QDockWidget):
 
     def initUI(self):
         '''initiates ScoreBoard UI'''
-        self.setMaximumSize(250, self.height())
-        self.setStyleSheet("background-color: blue")
+        self.setStyleSheet("background-color: #E1BF6D;"
+                           "font-family: Arial;"
+                           "font-size: 14px;")
+        self.setFixedWidth(300)
 
-        self.center()
         self.setWindowTitle('ScoreBoard')
 
         # create a widget to hold other widgets

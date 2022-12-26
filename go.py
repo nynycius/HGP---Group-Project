@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QDockWidget
 from PyQt6.QtCore import Qt
 from board import Board
 from score_board import ScoreBoard
@@ -21,9 +21,12 @@ class Go(QMainWindow):
         '''initiates application UI'''
 
         main_widget = QWidget()
+
         self.setCentralWidget(main_widget)
 
-        self.setStyleSheet("background-color: yellow")
+        self.scoreBoard.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
+
+        self.setStyleSheet("background-color: #F7F1ED")
 
         layout = QHBoxLayout(main_widget)
         layout.addWidget(self.board)
@@ -33,7 +36,7 @@ class Go(QMainWindow):
 
         screen = self.screen().availableGeometry()
 
-        self.setMinimumWidth(int(screen.width() * 0.8))
+        self.setMinimumWidth(int(screen.width()*0.8))
         self.setMinimumHeight(int(screen.height() * 0.88))
 
         self.setWindowTitle('Go')

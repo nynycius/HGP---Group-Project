@@ -29,7 +29,7 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         self.isStarted = False  # game is not currently started
 
-        self.setStyleSheet("background-color: red;")
+        self.setStyleSheet("background-color: #CD950C;")
 
         self.setContentsMargins(0, 0, 0, 0)
 
