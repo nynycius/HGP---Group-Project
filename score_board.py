@@ -16,7 +16,9 @@ class ScoreBoard(QDockWidget):
 
     def initUI(self):
         '''initiates ScoreBoard UI'''
-        self.setMinimumSize(250, self.height())
+        self.setMaximumSize(250, self.height())
+        self.setStyleSheet("background-color: blue")
+
         self.center()
         self.setWindowTitle('ScoreBoard')
 
