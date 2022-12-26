@@ -6,7 +6,6 @@ from PyQt6.uic.uiparser import QtWidgets
 
 from piece import Piece
 
-
 class Board(QFrame):  # base the board on a QFrame widget
     updateTimerSignal = pyqtSignal(int)  # signal sent when timer is updated
     clickLocationSignal = pyqtSignal(str)  # signal sent when there is a new click location
@@ -14,9 +13,7 @@ class Board(QFrame):  # base the board on a QFrame widget
     # TODO set the board width and height to be square
     boardWidth = 7  # board is 0 squares wide # TODO this needs updating
     boardHeight = 7  #
-
     timerSpeed = 1000  # the timer updates every 1 millisecond
-
     counter = 10  # the number the counter will count down from
 
     def __init__(self, parent):
@@ -25,49 +22,32 @@ class Board(QFrame):  # base the board on a QFrame widget
         #  parent is go, board is declared in go file using self as parameter
         self.go = parent
 
-        self.timer = QBasicTimer()  # create a timer for the game
-
-        self.isStarted = False  # game is not currently started
-
-        self.setStyleSheet("background-color: red;")
-
-        self.setContentsMargins(0, 0, 0, 0)
-
-        self.piece = Piece(Piece.NoPiece, 0, 0)
-
-        self.boardArray = [[self.piece for cell in range(self.boardWidth)] for row in range(self.boardHeight)]
-
-        self.piecesArray = []
-
-        self.printBoardArray()
-
-        self.grid = QGridLayout()
-
-        self.grid.setSpacing(0)
-
         self.initBoard()
 
     def initBoard(self):
         '''initiates board'''
-
+        self.timer = QBasicTimer()  # create a timer for the game
+        self.isStarted = False  # game is not currently started
         self.start()  # start the game which will start the timer
 
-
+        self.piece = Piece(0, 0, 0)
         # board 7x7 has 6x6 squares
         # TODO - create a 2d int/Piece array to store the state of the game
         # initializing array
+<<<<<<< HEAD
+        self.boardArray = [[self.piece for cell in range(8)]for row in range(8)]
+       # self.printBoardArray()
+=======
+        self.boardArray = [[self.piece for cell in range(self.boardWidth)]for row in range(self.boardHeight)]
+        self.printBoardArray()
+>>>>>>> 54dc38efff70c8075d58f81e409720057bf97d2e
 
-        # self.printBoardArray()
-
-        for row in range(self.boardWidth):
-            pieces_row = []
-            for col in range(self.boardHeight):
-                piece = Piece(Piece.NoPiece, row, col)
-                pieces_row.append(piece)
-                self.grid.addWidget(piece, row, col)  # adding piece to the equivalent position in the grid
-
-            # add piece rows to pieces array
-            self.piecesArray.append(pieces_row)
+        self.grid = QGridLayout()
+        for row in range(0, len(self.boardArray)):
+            for col in range(0, len(self.boardArray[0])):
+                piece1 = Piece(0, row, col)
+                self.grid.addWidget(piece1, row, col)  # adding piece to the equivalent position in the grid
+                self.boardArray[row][col] = piece1  # adding piece to the right position
 
         # add layout with right pieces
         self.setLayout(self.grid)
@@ -82,7 +62,7 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         # printing x and y of each piece (it index)
         print("boardArray x and y:")
-        print('\n'.join(['\t'.join([str(cell.get_x_and_y()) for cell in row]) for row in self.piecesArray]))
+        print('\n'.join(['\t'.join([str(cell.get_x_and_y()) for cell in row]) for row in self.boardArray]))
 
     def mousePosToColRow(self, event):
         '''convert the mouse click event to a row and column'''
@@ -90,11 +70,11 @@ class Board(QFrame):  # base the board on a QFrame widget
     def squareWidth(self):
         '''returns the width of one square in the board'''
         # return as int to make work easier with the other methods
-        return int(self.contentsRect().width() / (self.boardWidth + 1))
+        return int(self.contentsRect().width() / self.boardWidth + 1)
 
     def squareHeight(self):
         '''returns the height of one square of the board'''
-        return int(self.contentsRect().height() / (self.boardHeight + 1))
+        return int(self.contentsRect().height() / self.boardHeight + 1)
 
     def start(self):
         '''starts game'''
@@ -146,32 +126,61 @@ class Board(QFrame):  # base the board on a QFrame widget
         painter.setPen(QPen(Qt.GlobalColor.black, 3, Qt.PenStyle.SolidLine))
 
         #  take the square size to calculate drawn position
-        square_width = self.squareWidth()
-
-        initial_position = square_width
-
-        final_position = square_width * self.boardWidth
+        square_size = self.squareWidth()
+        initial_position = square_size
+        final_position = square_size * 10
 
         for i in range(1, self.boardWidth + 1):
+
             # determine the position of the line
-            position = square_width * i
+            position = square_size * i
 
             #  row
             painter.drawLine(initial_position, position, final_position, position)
             #  colum
             painter.drawLine(position, initial_position, position, final_position)
 
+
+        # painter.setBrush(Qt.GlobalColor.darkYellow)
+        # for row in range(0, Board.boardHeight):
+        #     for col in range(0, Board.boardWidth):
+        #         painter.save()
+        #         colTransformation = self.squareWidth() * col  # TODO set this value equal the transformation in the column direction
+        #         rowTransformation = self.squareHeight() * row  # TODO set this value equal the transformation in the row direction
+        #         painter.translate(colTransformation, rowTransformation)
+        #         # if col == 0:
+        #         #     painter.setBrush(Qt.GlobalColor.blue)
+        #         #     painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()),
+        #         #                      painter.brush())
+        #         painter.fillRect(row, col, int(self.squareWidth()), int(self.squareHeight()),
+        #                          painter.brush())
+        #
+        #         painter.restore()
+        #         if painter.brush() == Qt.GlobalColor.darkYellow:
+        #             painter.setBrush(Qt.GlobalColor.black)
+        #         else:
+        #             painter.setBrush(Qt.GlobalColor.darkYellow)
+
+
+
     def resizeEvent(self, event):
+
         print(f"height: {self.height()}, wight: {self.width()}")
         print(f"Butom height: {self.piece.height()}, wight: {self.piece.width()}")
-        self.setFixedWidth(self.height())
+        self.setFixedWidth(self.go.height())
 
-        top = int(self.squareHeight() * 0.5)
-        bottom = int(self.squareWidth() * 0.5)
-        left = int(self.squareHeight() * 0.5)
-        right = int(self.squareWidth() * 0.5)
+        top = int(self.squareHeight() * 0.25)
+        bottom = int(self.squareWidth() * 0.25)
+        left = int(self.squareHeight() * 0.25)
+        right = int(self.squareWidth() * 0.25)
 
-        self.grid.setContentsMargins(top, left, right, bottom)
-    #
+        self.grid.setContentsMargins(left, top, right, bottom)
 
-    # top = 200 - self.squareHeight()/2
+        # self.update()
+
+        # top = 200 - self.squareHeight()/2
+
+
+
+
+
