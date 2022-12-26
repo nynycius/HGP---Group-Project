@@ -21,7 +21,7 @@ class Piece(QPushButton):
         self.y = y
         #  comment out the next line to see button border
         self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px; padding: 0px")  # background and border transparent
-        self.setIcon(QIcon("./icons/white.png"))  # must be changed to blank.png
+        self.setIcon(QIcon("./icons/blank.png"))  # must be changed to blank.png
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.pressed.connect(self.piece_color)
 
@@ -31,18 +31,18 @@ class Piece(QPushButton):
         print("pressed: ", self.getPiece())
         # if piece is in a given state change to the next one
         if self.getPiece() == 0:
-            self.setIcon(QIcon("./icons/blank.png"))
+            self.setIcon(QIcon("./icons/black.png"))
             self.Status = 1
 
         elif self.getPiece() == 1:
-            self.setIcon(QIcon("./icons/black.png"))
+            self.setIcon(QIcon("./icons/white.png"))
             self.Status = 2
 
         elif self.getPiece() == 2:
-            self.setIcon(QIcon("./icons/white.png"))
+            self.setIcon(QIcon("./icons/blank.png"))
             self.Status = 0
 
-    def getPiece(self): # return PieceType
+    def getPiece(self):# return PieceType
         return self.Status
 
     def getLiberties(self): # return Liberties
