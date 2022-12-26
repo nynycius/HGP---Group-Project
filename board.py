@@ -33,9 +33,9 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         self.setContentsMargins(0, 0, 0, 0)
 
-        self.piece = Piece(Piece.NoPiece, 0, 0)
+        # self.piece = Piece(Piece.NoPiece, 0, 0)
 
-        self.boardArray = [[self.piece for cell in range(self.boardWidth)] for row in range(self.boardHeight)]
+        self.boardArray = [[0 for cell in range(self.boardWidth)] for row in range(self.boardHeight)]
 
         self.piecesArray = []
 
@@ -62,7 +62,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         for row in range(self.boardWidth):
             pieces_row = []
             for col in range(self.boardHeight):
-                piece = Piece(Piece.NoPiece, row, col)
+                piece = Piece(Piece.NoPiece, row, col, self)
                 pieces_row.append(piece)
                 self.grid.addWidget(piece, row, col)  # adding piece to the equivalent position in the grid
 
@@ -78,7 +78,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         '''prints the boardArray in an attractive way'''
         # print value of piece (0, 1 or 2)
         print("boardArray:")
-        print('\n'.join(['\t'.join([str(cell.getPiece()) for cell in row]) for row in self.boardArray]))
+        print('\n'.join(['\t'.join([str(cell.getPiece()) for cell in row]) for row in self.piecesArray]))
 
         # printing x and y of each piece (it index)
         print("boardArray x and y:")
@@ -162,8 +162,8 @@ class Board(QFrame):  # base the board on a QFrame widget
             painter.drawLine(position, initial_position, position, final_position)
 
     def resizeEvent(self, event):
-        print(f"height: {self.height()}, wight: {self.width()}")
-        print(f"Butom height: {self.piece.height()}, wight: {self.piece.width()}")
+        # print(f"height: {self.height()}, wight: {self.width()}")
+        # print(f"Butom height: {self.piece.height()}, wight: {self.piece.width()}")
         self.setFixedWidth(self.height())
 
         top = int(self.squareHeight() * 0.5)
@@ -175,3 +175,6 @@ class Board(QFrame):  # base the board on a QFrame widget
     #
 
     # top = 200 - self.squareHeight()/2
+
+    # def player(selfs):
+    #
