@@ -33,6 +33,8 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         self.setContentsMargins(0, 0, 0, 0)
 
+        self.turn_counter = 1
+
         # self.piece = Piece(Piece.NoPiece, 0, 0)
 
         self.boardArray = [[0 for cell in range(self.boardWidth)] for row in range(self.boardHeight)]
@@ -52,7 +54,6 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         self.start()  # start the game which will start the timer
 
-
         # board 7x7 has 6x6 squares
         # TODO - create a 2d int/Piece array to store the state of the game
         # initializing array
@@ -62,7 +63,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         for row in range(self.boardWidth):
             pieces_row = []
             for col in range(self.boardHeight):
-                piece = Piece(Piece.NoPiece, row, col, self)
+                piece = Piece(self, row, col)
                 pieces_row.append(piece)
                 self.grid.addWidget(piece, row, col)  # adding piece to the equivalent position in the grid
 
@@ -172,9 +173,12 @@ class Board(QFrame):  # base the board on a QFrame widget
         right = int(self.squareWidth() * 0.5)
 
         self.grid.setContentsMargins(top, left, right, bottom)
+
     #
 
     # top = 200 - self.squareHeight()/2
 
-    # def player(selfs):
-    #
+    def clicker(self):
+
+        self.turn_counter += 1
+        return self.turn_counter

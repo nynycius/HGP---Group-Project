@@ -12,10 +12,10 @@ class Piece(QPushButton):
     liberties = 0 # default no liberties
     x = -1
     y = -1
-
-    def __init__(self, Piece, x, y):  #constructor
+    icon = QIcon()
+    def __init__(self, board, x, y):  #constructor
         super().__init__()
-        self.Status = Piece
+        self.Status = 0
         self.liberties = 0  # starting with 0 liberty as default, must set right liberty when placed
         self.x = x
         self.y = y
@@ -25,22 +25,28 @@ class Piece(QPushButton):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.pressed.connect(self.piece_color)
 
+        self.board = board
+
+
+
     # Small test to change the icons, must be changed based on players turn if Status == 0 (blank) only
     def piece_color(self):
-
-        print("pressed: ", self.getPiece())
+        #
+        # self.board.player
+        print(f"pressed: {self.getPiece()}, x and y: {self.get_x_and_y()}")
         # if piece is in a given state change to the next one
-        if self.getPiece() == 0:
-            self.setIcon(QIcon("./icons/black.png"))
-            self.Status = 1
 
-        elif self.getPiece() == 1:
-            self.setIcon(QIcon("./icons/white.png"))
-            self.Status = 2
+        # if the piece is blank it is allowed to change
+        if self.Status == 0:
+            if self.board.clicker() % 2 == 0:
+                self.setIcon(QIcon("./icons/black.png"))
+                self.Status = 1
+                self.board.printBoardArray()
 
-        elif self.getPiece() == 2:
-            self.setIcon(QIcon("./icons/blank.png"))
-            self.Status = 0
+
+            else:
+                self.setIcon(QIcon("./icons/white.png"))
+                self.Status = 2
 
     def getPiece(self):# return PieceType
         return self.Status
