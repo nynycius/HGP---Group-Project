@@ -174,10 +174,6 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         self.grid.setContentsMargins(top, left, right, bottom)
 
-    #
-
-    # top = 200 - self.squareHeight()/2
-
     def clicker(self):
 
         self.turn_counter += 1
