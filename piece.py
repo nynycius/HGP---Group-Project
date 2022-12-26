@@ -31,15 +31,15 @@ class Piece(QPushButton):
         print("pressed: ", self.getPiece())
         # if piece is in a given state change to the next one
         if self.getPiece() == 0:
-            self.setIcon(QIcon("./icons/black.png"))
+            self.setIcon(QIcon("./icons/blank.png"))
             self.Status = 1
 
         elif self.getPiece() == 1:
-            self.setIcon(QIcon("./icons/white.png"))
+            self.setIcon(QIcon("./icons/black.png"))
             self.Status = 2
 
         elif self.getPiece() == 2:
-            self.setIcon(QIcon("./icons/blank.png"))
+            self.setIcon(QIcon("./icons/white.png"))
             self.Status = 0
 
     def getPiece(self): # return PieceType
