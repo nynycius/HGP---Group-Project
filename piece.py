@@ -56,10 +56,8 @@ class Piece(QPushButton):
             for adjacent in self.adjacentPiece:
                 print(str(adjacent.get_x_and_y()), adjacent.getLiberties())
 
-            print(len(self.getOpponentPiece()))
-
-
-
+            print("Amount of enemies around", len(self.getOpponentPiece()))
+            self.captureSinglePiece(self.getOpponentPiece())
 
     def getPiece(self):  # return PieceType
         return self.status
@@ -146,20 +144,21 @@ class Piece(QPushButton):
         return opponent
 
 
+    def captureSinglePiece(self, opponent):
+        enemies_around = 0
+        surrounded_by_enemies = False
 
-    # def captureSinglePiece(self, opponent):
-    #     enemies_around = 0
-    #     surrounded_by_enemies = False
-    #
-    #     if len(opponent) == 1:
-    #         piece = opponent[0]
-    #         print("efeg",len(piece.getAdjacentPieces()))
-    #         for a in piece.getAdjacentPieces():
-    #             if a.getPiece() != piece.getPiece():
-    #                 enemies_around += 1
-    #
-    #         if enemies_around == len(piece.getAdjacentPieces()):
-    #             surrounded_by_enemies = True
-    #
-    #         if surrounded_by_enemies:
-    #             piece.setPiece(0)
+        if len(opponent) == 1:
+            piece = opponent[0]
+            print("efeg",len(piece.getAdjacentPieces()))
+            for a in piece.getAdjacentPieces():
+                print(f"Oponents {a.get_x_and_y()}")
+                if a.getPiece() != piece.getPiece() and a.getPiece() != 0:
+                    enemies_around += 1
+
+            if enemies_around == len(piece.getAdjacentPieces()):
+                surrounded_by_enemies = True
+
+            if surrounded_by_enemies:
+                piece.setPiece(0)
+                print(f"captured {piece.get_x_and_y()}")
