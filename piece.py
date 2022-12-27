@@ -17,11 +17,15 @@ class Piece(QPushButton):
     # x = -1
     # y = -1
     # icon = QIcon()
+    black_move = []
+    white_move = []
 
     def __init__(self, board, x, y):  # constructor
         super().__init__()
         self.status = 0
-        self.liberties = 0 # starting with 4 liberty as default, must set right liberty when placed
+
+        self.liberties = 0  # starting with 0 liberty as default, must set right liberty when placed
+
         self.x = x
         self.y = y
         #  comment out the next line to see button border
@@ -34,15 +38,16 @@ class Piece(QPushButton):
         # create a board instance to verify turn
         self.board = board
 
-        # self.score_board = ScoreBoard()
-
         self.adjacentPiece = []
+
+        # variable to keep track on player last move for KO rule
+
 
     # Small test to change the icons, must be changed based on players turn if Status == 0 (blank) only
     def piece_color(self):
 
-        # if the movement is not a self capture, stone can be placed
-        if self.suicide(self.getAdjacentPieces()):
+        # if the movement is not a self capture, stone can be placed, also check if a capture can be made
+        if self.suicide(self.getAdjacentPieces(), self.captureSinglePiece(self.getOpponentPiece())):
             # if piece is in a given state change to the next one
             # if the piece is blank it is allowed to change
             if self.status == 0:
@@ -50,15 +55,26 @@ class Piece(QPushButton):
                 if self.board.clicker() % 2 == 0:  # only change turn when piece can be placed
                     self.setIcon(QIcon("./icons/black.png"))
                     self.status = 1
+                    #  check if move is not equal to last move
+                    self.KO(self.get_x_and_y())
+                    # if movement is different store new move
+                    self.black_move.append(self.get_x_and_y())
+
                 else:
                     self.setIcon(QIcon("./icons/white.png"))
                     self.status = 2
+                    #  check if move is not equal to last move
+                    self.KO(self.get_x_and_y())
+                     # if movement is different store new move
+                    self.white_move.append(self.get_x_and_y())
 
-            print(f"pressed: {self.getPiece()}, x and y: {self.get_x_and_y()}")
+
+            # print("black", self.black_move)
+            # print("white", self.white_move)
+            # print(f"pressed: {self.getPiece()}, x and y: {self.get_x_and_y()}")
          #   print(self.getAdjacentPieces())
             for adjacent in self.adjacentPiece:
                 print(str(adjacent.get_x_and_y()), adjacent.getLiberties())
-
             print("Amount of enemies around", len(self.getOpponentPiece()))
             # self.captureSinglePiece(self.getOpponentPiece())
             self.captureGroup(self.getAdjacentGroups())
@@ -67,6 +83,7 @@ class Piece(QPushButton):
 
     def setPiece(self, p):
         self.status = p
+        self.liberties = 0
         self.setIcon(QIcon("./icons/blank.png"))
 
     def getLiberties(self):  # return Liberties
@@ -116,63 +133,63 @@ class Piece(QPushButton):
 
         return self.adjacentPiece
 
-    def getPiecesInGroup(self):
-        if self.status == 0:
-            raise Exception("Piece is empty")
+    # def getPiecesInGroup(self):
+    #     if self.status == 0:
+    #         raise Exception("Piece is empty")
+    #
+    #     group: set[Piece] = set()
+    #
+    #     search = [self]
+    #
+    #     found = set()
+    #     while search:
+    #         piece = search.pop()
+    #         group.add(piece)
+    #
+    #         adjacent_piece: Piece
+    #         for adjacent_piece in piece.adjacentPiece:
+    #             if adjacent_piece.getPiece() == self.status and adjacent_piece not in found:
+    #                 search.append(adjacent_piece)
+    #
+    #         found.add(piece)
+    #
+    #         return group
+    #
+    # def getAdjacentGroups(self):
+    #     adjacent_opponent_groups = []
+    #     for adjacent in self.getAdjacentPieces():
+    #         if any([adjacent in opponent_group for opponent_group in adjacent_opponent_groups]):
+    #             continue
+    #         adjacent_opponent_groups.append(adjacent.getPiecesInGroup())
+    #
+    #     return adjacent_opponent_groups
 
-        group: set[Piece] = set()
-
-        search = [self]
-
-        found = set()
-        while search:
-            piece = search.pop()
-            group.add(piece)
-
-            adjacent_piece: Piece
-            for adjacent_piece in piece.adjacentPiece:
-                if adjacent_piece.getPiece() == self.status and adjacent_piece not in found:
-                    search.append(adjacent_piece)
-
-            found.add(piece)
-
-            return group
-
-    def getAdjacentGroups(self):
-        adjacent_opponent_groups = []
-        for adjacent in self.getAdjacentPieces():
-            if any([adjacent in opponent_group for opponent_group in adjacent_opponent_groups]):
-                continue
-            adjacent_opponent_groups.append(adjacent.getPiecesInGroup())
-
-        return adjacent_opponent_groups
-
-    def captureGroup(self, oppGroup):
-        opponentGroup = oppGroup
-        print()
-        for group in y:
-            print(group.getPiece())
-            # group_liberty = sum([self.getLiberties() for piece in group])
-            #
-            # if group_liberty == 0:
-            #     [self.setPiece(0) for p in group]
-
-
+    # def captureGroup(self, oppGroup):
+    #     opponentGroup = oppGroup
+    #     print()
+    #     for group in y:
+    #         print(group.getPiece())
+    #         # group_liberty = sum([self.getLiberties() for piece in group])
+    #         #
+    #         # if group_liberty == 0:
+    #         #     [self.setPiece(0) for p in group]
 
 
-    def suicide(self, adjacent):  # pass list of adjacent positions to check movement is valid
+
+
+    def suicide(self, adjacent, capture):  # pass list of adjacent positions to check movement is valid
 
         #  set dataStructure doesn't allow repetitive values, so if it len equals to 1, all elements are the same
         same_values = 0
         adjacent_len = len(adjacent)
-
+        if capture:
+            return True
         for i in range(adjacent_len):
             # check if all values are the same
             if adjacent[0].getPiece() == adjacent[i].getPiece():
                 same_values += 1
-                print(same_values)
 
-        turn = self.board.turn_counter % 2  # add one to match with the current player turn
+        turn = self.board.turn_counter % 2
         #  if the same_values are equals to the length of adjacent, them all values are the same
         if same_values == adjacent_len:
             # if all elements are the same, check if it is 0, 1 or 2
@@ -189,36 +206,59 @@ class Piece(QPushButton):
             return True
 
     def getOpponentPiece(self):
-        if self.status == 0:
-            raise Exception("This piece is empty")
-
+        # if self.status == 0:
+            # raise Exception("This piece is empty")
+        # store opponents in a list
         opponent = []
+        # take all pieces adjacent to the current one
         for adjacent in self.adjacentPiece:
             if adjacent.getPiece() != 0 and adjacent.getPiece != self.status:
                     opponent.append(adjacent)
 
         return opponent
+    def captureSinglePiece(self, opponent):
 
+        surrounded_by_enemies = False
 
-    # def captureSinglePiece(self, opponent):
-    #     enemies_around = 0
-    #     captured = False
-    #
-    #     if len(opponent) == 1:
-    #         piece = opponent[0]
-    #         print("efeg",len(piece.getAdjacentPieces()))
-    #         for a in piece.getAdjacentPieces():
-    #             print(f"Oponents {a.get_x_and_y()}")
-    #             if a.getPiece() != piece.getPiece() and a.getPiece() != 0:
-    #                 enemies_around += 1
-    #
-    #         if enemies_around == len(piece.getAdjacentPieces()):
-    #             captured = True
-    #
-    #         if captured:
-    #             piece.setPiece(0)
-    #             print(f"captured {piece.get_x_and_y()}")
-    #             self.updateScoreBoard()
+        # for i in opponent:
+        #     print(f"opponents around: {i.get_x_and_y()}")
+        # if there is more than one enemy around, check both
+        for i in opponent:
+            enemies_around = 0
+            piece = i
+            # print("target opponet", piece.get_x_and_y())
+            # print("adjacent pieces", len(piece.getAdjacentPieces()))
+            for a in piece.getAdjacentPieces():
+                # print(f"Oponents {a.get_x_and_y()}, value {a.getPiece()}")
+                if a.getPiece() != piece.getPiece() and a.getPiece() != 0:
+                    enemies_around += 1
+                    # print("enemies around:", enemies_around)
 
+            # Check if enemies surrounding match to the size os the adjacent spaces
+            if enemies_around == len(piece.getAdjacentPieces()):
+                surrounded_by_enemies = True
+                # print("enemies around:", enemies_around)
+
+            # if the is true and the same size of the adjacent pieces erase piece
+            if surrounded_by_enemies and piece.liberties == len(piece.getAdjacentPieces()):
+                piece.setPiece(0)
+                # print(f"captured {piece.get_x_and_y()}")
+                # set surrounded_by_enemies to false again for the next interation
+                return True
+    def KO(self, move):  # not working properly
+
+        # printing for debug
+        # print(">>>>> checking move <<<")
+        # print(f"last move, black: {self.black_move}, white {self.white_move}"
+        #       f"\n new move: {move}")
+        if move == self.black_move or move == self.white_move:
+            #  print for debbug
+            # print(">>>>>> GOT IN <<<<")
+            # if the move are the same, decrement turn and erase last move
+            self.board.turn_counter -= 1
+            self.setPiece(0)
+            # printing for debug
+            # print(f"last move, black: {self.black_move[-1]}, white {self.white_move[-1]}"
+            #       f"\n new move: {move}")
 
 
