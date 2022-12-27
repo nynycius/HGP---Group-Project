@@ -112,22 +112,15 @@ class Piece(QPushButton):
 
         if len(same_values) == 1:
             # if all elements are the same, check if it is 0, 1 or 2
-            if adjacent[0] == 0:
+            if (adjacent[0] == 0
+                    or adjacent[0] == 1 and turn == 1
+                    or adjacent[0] == 2 and turn == 0):
                 # if it is 0 the position is valid
-                return True
-            # if all pieces are black and the next is black turn, return true
-            elif adjacent[0] == 1 and turn == 1:
-                return True
-            # if all pieces are white and the next is white turn, return true
-            elif adjacent[0] == 2 and turn == 0:
                 return True
             #  else, the movement is invalid return false
             else:
                 print(f"{str(self.get_x_and_y())} The movement is not valid, self capture detected ")
                 return False
 
-        # if the length of same_values is bigger than 1, then return true
-        else:
-            return True
 
 
