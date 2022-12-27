@@ -149,7 +149,10 @@ class Board(QFrame):  # base the board on a QFrame widget
                 p.setLiberties(0)
 
         self.turn_counter = 1
-
+        self.player1Score = 0
+        self.player2Score = 0
+        self.updatePlayer1ScoreSignal.emit(self.player1Score)
+        self.updatePlayer2ScoreSignal.emit(self.player2Score)
 
     def tryMove(self, newX, newY):
         '''tries to move a piece'''
