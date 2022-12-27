@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QFrame, QLabel, QGridLayout, QPushButton, QSizePolicy, QApplication
+from PyQt6.QtWidgets import QFrame, QLabel, QGridLayout, QPushButton, QSizePolicy, QApplication, QMessageBox, QApplication
 from PyQt6.QtCore import Qt, QBasicTimer, pyqtSignal, QPointF, QSize
 from PyQt6.QtGui import QPainter, QPen, QIcon
 from PyQt6.uic.properties import QtGui
@@ -46,6 +46,9 @@ class Board(QFrame):  # base the board on a QFrame widget
         self.grid = QGridLayout()
 
         self.grid.setSpacing(0)
+
+        # keeps track of number of count's in a row
+        self.skip_count = 0
 
         self.initBoard()
 
@@ -100,8 +103,7 @@ class Board(QFrame):  # base the board on a QFrame widget
     def start(self):
         '''starts game'''
         self.isStarted = True  # set the boolean which determines if the game has started to TRUE
-        self.resetGame()  # reset the game
-        self.timer.start(self.timerSpeed, self)  # start the timer with the correct speed
+        # self.timer.start(self.timerSpeed, self)  # start the timer with the correct speed
         print("start () - timer is started")
 
     def timerEvent(self, event):
@@ -135,6 +137,14 @@ class Board(QFrame):  # base the board on a QFrame widget
     def resetGame(self):
         '''clears pieces from the board'''
         # TODO write code to reset game
+        for row in self.piecesArray:
+            for p in row:
+                p.setPiece(0)
+                print("reset status", p.getPiece())
+
+        self.turn_counter = 1
+        print("------")
+        self.printBoardArray()
 
     def tryMove(self, newX, newY):
         '''tries to move a piece'''
@@ -179,6 +189,25 @@ class Board(QFrame):  # base the board on a QFrame widget
     # top = 200 - self.squareHeight()/2
 
     def clicker(self):
-
         self.turn_counter += 1
+
+        # reset skip count to zero
+        self.skip_count = 0
+
         return self.turn_counter
+
+    def skip(self):
+        self.turn_counter += 1
+
+        # if skip occurs twice in a row
+        if(self.skip_count == 1):
+            skip_message = QMessageBox.question(self, "Game Over", "Game is over, Restart?")
+
+            if skip_message == QMessageBox.Yes:
+                self.resetGame()
+            else:
+                QApplication.quit()
+
+        self.skip_count += 1
+
+
