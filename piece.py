@@ -4,6 +4,8 @@ from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon, QColor
 from PyQt6.QtWidgets import QPushButton, QSizePolicy, QApplication
 
+from score_board import ScoreBoard
+
 
 # TODO: Add more functions as needed for your Pieces
 class Piece(QPushButton):
@@ -19,7 +21,7 @@ class Piece(QPushButton):
     def __init__(self, board, x, y):  # constructor
         super().__init__()
         self.status = 0
-        self.liberties = 4  # starting with 4 liberty as default, must set right liberty when placed
+        self.liberties = 0 # starting with 4 liberty as default, must set right liberty when placed
         self.x = x
         self.y = y
         #  comment out the next line to see button border
@@ -32,8 +34,9 @@ class Piece(QPushButton):
         # create a board instance to verify turn
         self.board = board
 
+        # self.score_board = ScoreBoard()
+
         self.adjacentPiece = []
-        self.adjacentLiberties = []
 
     # Small test to change the icons, must be changed based on players turn if Status == 0 (blank) only
     def piece_color(self):
@@ -57,8 +60,8 @@ class Piece(QPushButton):
                 print(str(adjacent.get_x_and_y()), adjacent.getLiberties())
 
             print("Amount of enemies around", len(self.getOpponentPiece()))
-            self.captureSinglePiece(self.getOpponentPiece())
-
+            # self.captureSinglePiece(self.getOpponentPiece())
+            self.captureGroup(self.getAdjacentGroups())
     def getPiece(self):  # return PieceType
         return self.status
 
@@ -67,9 +70,10 @@ class Piece(QPushButton):
         self.setIcon(QIcon("./icons/blank.png"))
 
     def getLiberties(self):  # return Liberties
+        self.liberties = 0
         for adjacent_piece in self.adjacentPiece:
             if adjacent_piece.getPiece() > 0:
-                self.liberties -= 1
+                self.liberties += 1
         return self.liberties
 
     def setLiberties(self, liberties):  # set Liberties
@@ -112,6 +116,50 @@ class Piece(QPushButton):
 
         return self.adjacentPiece
 
+    def getPiecesInGroup(self):
+        if self.status == 0:
+            raise Exception("Piece is empty")
+
+        group: set[Piece] = set()
+
+        search = [self]
+
+        found = set()
+        while search:
+            piece = search.pop()
+            group.add(piece)
+
+            adjacent_piece: Piece
+            for adjacent_piece in piece.adjacentPiece:
+                if adjacent_piece.getPiece() == self.status and adjacent_piece not in found:
+                    search.append(adjacent_piece)
+
+            found.add(piece)
+
+            return group
+
+    def getAdjacentGroups(self):
+        adjacent_opponent_groups = []
+        for adjacent in self.getAdjacentPieces():
+            if any([adjacent in opponent_group for opponent_group in adjacent_opponent_groups]):
+                continue
+            adjacent_opponent_groups.append(adjacent.getPiecesInGroup())
+
+        return adjacent_opponent_groups
+
+    def captureGroup(self, oppGroup):
+        opponentGroup = oppGroup
+        print()
+        for group in y:
+            print(group.getPiece())
+            # group_liberty = sum([self.getLiberties() for piece in group])
+            #
+            # if group_liberty == 0:
+            #     [self.setPiece(0) for p in group]
+
+
+
+
     def suicide(self, adjacent):  # pass list of adjacent positions to check movement is valid
     #
     #     #  set dataStructure doesn't allow repetitive values, so if it len equals to 1, all elements are the same
@@ -144,21 +192,25 @@ class Piece(QPushButton):
         return opponent
 
 
-    def captureSinglePiece(self, opponent):
-        enemies_around = 0
-        surrounded_by_enemies = False
+    # def captureSinglePiece(self, opponent):
+    #     enemies_around = 0
+    #     captured = False
+    #
+    #     if len(opponent) == 1:
+    #         piece = opponent[0]
+    #         print("efeg",len(piece.getAdjacentPieces()))
+    #         for a in piece.getAdjacentPieces():
+    #             print(f"Oponents {a.get_x_and_y()}")
+    #             if a.getPiece() != piece.getPiece() and a.getPiece() != 0:
+    #                 enemies_around += 1
+    #
+    #         if enemies_around == len(piece.getAdjacentPieces()):
+    #             captured = True
+    #
+    #         if captured:
+    #             piece.setPiece(0)
+    #             print(f"captured {piece.get_x_and_y()}")
+    #             self.updateScoreBoard()
 
-        if len(opponent) == 1:
-            piece = opponent[0]
-            print("efeg",len(piece.getAdjacentPieces()))
-            for a in piece.getAdjacentPieces():
-                print(f"Oponents {a.get_x_and_y()}")
-                if a.getPiece() != piece.getPiece() and a.getPiece() != 0:
-                    enemies_around += 1
 
-            if enemies_around == len(piece.getAdjacentPieces()):
-                surrounded_by_enemies = True
 
-            if surrounded_by_enemies:
-                piece.setPiece(0)
-                print(f"captured {piece.get_x_and_y()}")
