@@ -184,10 +184,7 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         self.grid.setContentsMargins(top, left, right, bottom)
 
-    #
-
-    # top = 200 - self.squareHeight()/2
-
+    # increment the turn_counter every time a stone is positioned
     def clicker(self):
         self.turn_counter += 1
 
