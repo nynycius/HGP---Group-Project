@@ -113,24 +113,32 @@ class Piece(QPushButton):
         return self.adjacentPiece
 
     def suicide(self, adjacent):  # pass list of adjacent positions to check movement is valid
-    #
-    #     #  set dataStructure doesn't allow repetitive values, so if it len equals to 1, all elements are the same
-    #     same_values = set(adjacent)
-    #     turn = self.board.turn_counter % 2  # add one to match with the current player turn
-    #
-    #     if len(same_values) == 1:
-    #         # if all elements are the same, check if it is 0, 1 or 2
-    #         if (adjacent[0] == 0
-    #                 or adjacent[0] == 1 and turn == 1
-    #                 or adjacent[0] == 2 and turn == 0):
-    #             # if it is 0 the position is valid
-    #             return True
-    #         #  else, the movement is invalid return false
-    #         else:
-    #             print(f"{str(self.get_x_and_y())} The movement is not valid, self capture detected ")
-    #             return False
-    #     else:
-        return True
+
+        #  set dataStructure doesn't allow repetitive values, so if it len equals to 1, all elements are the same
+        same_values = 0
+        adjacent_len = len(adjacent)
+
+        for i in range(adjacent_len):
+            # check if all values are the same
+            if adjacent[0].getPiece() == adjacent[i].getPiece():
+                same_values += 1
+                print(same_values)
+
+        turn = self.board.turn_counter % 2  # add one to match with the current player turn
+        #  if the same_values are equals to the length of adjacent, them all values are the same
+        if same_values == adjacent_len:
+            # if all elements are the same, check if it is 0, 1 or 2
+            if (adjacent[0].getPiece() == 0
+                    or adjacent[0].getPiece() == 1 and turn == 1
+                    or adjacent[0].getPiece() == 2 and turn == 0):
+                # if it is 0 the position is valid
+                return True
+            #  else, the movement is invalid return false
+            else:
+                print(f"{str(self.get_x_and_y())} The movement is not valid, self capture detected ")
+                return False
+        else:
+            return True
 
     def getOpponentPiece(self):
         if self.status == 0:
