@@ -140,7 +140,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         for row in self.piecesArray:
             for p in row:
                 p.setPiece(0)
-                print("reset status", p.getPiece())
+                # print("reset status", p.getPiece())
 
         self.turn_counter = 1
         print("------")
@@ -201,7 +201,7 @@ class Board(QFrame):  # base the board on a QFrame widget
             skip_message = QMessageBox.question(self, "Game Over", "Game is over, Restart?")
 
 
-            if skip_message == QMessageBox.Yes:
+            if skip_message == skip_message.Yes:
                 self.resetGame()
             else:
                 QApplication.quit()
