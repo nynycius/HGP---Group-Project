@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QDockWidget, QVBoxLayout, QWidget, \
-    QLabel  # TODO import additional Widget classes as desired
+    QLabel, QPushButton  # TODO import additional Widget classes as desired
 from PyQt6.QtCore import pyqtSlot
 
 
@@ -43,11 +43,17 @@ class ScoreBoard(QDockWidget):
         self.mainLayout.addWidget(self.label_pl2_score)
         self.mainLayout.addWidget(self.label_clickLocation)
         self.mainLayout.addWidget(self.label_timeRemaining)
+
+        # create skip button
+        self.skip_button = QPushButton("Skip")
+        self.mainLayout.addWidget(self.skip_button)
+
+        self.reset_button = QPushButton("Reset")
+        self.mainLayout.addWidget(self.reset_button)
+
+
         self.setWidget(self.mainWidget)
         self.show()
-
-    def center(self):
-        '''centers the window on the screen, you do not need to implement this method'''
 
     def make_connection(self, board):
         '''this handles a signal sent from the board class'''
