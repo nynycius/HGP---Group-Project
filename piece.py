@@ -19,7 +19,7 @@ class Piece(QPushButton):
     def __init__(self, board, x, y):  # constructor
         super().__init__()
         self.status = 0
-        self.liberties = 0  # starting with 0 liberty as default, must set right liberty when placed
+        self.liberties = 4  # starting with 0 liberty as default, must set right liberty when placed
         self.x = x
         self.y = y
         #  comment out the next line to see button border
@@ -61,8 +61,11 @@ class Piece(QPushButton):
         self.setIcon(QIcon("./icons/blank.png"))
 
     def getLiberties(self):  # return Liberties
-        self.libs = self.liberties
-        return self.libs
+
+        for adjacent_piece in self.adjacentPiece:
+            if adjacent_piece > 0:
+                self.liberties -= 1
+        return self.liberties
 
     def setLiberties(self, liberties):  # set Liberties
         self.liberties = liberties
