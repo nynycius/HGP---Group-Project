@@ -10,6 +10,10 @@ from piece import Piece
 class Board(QFrame):  # base the board on a QFrame widget
     updateTimerSignal = pyqtSignal(int)  # signal sent when timer is updated
     clickLocationSignal = pyqtSignal(str)  # signal sent when there is a new click location
+    updatePlayer1ScoreSignal = pyqtSignal(int)
+    updatePlayer2ScoreSignal = pyqtSignal(int)
+
+
 
     # TODO set the board width and height to be square
     boardWidth = 7  # board is 0 squares wide # TODO this needs updating
@@ -50,6 +54,11 @@ class Board(QFrame):  # base the board on a QFrame widget
         # keeps track of number of count's in a row
         self.skip_count = 0
 
+        self.player1Score = 0
+
+        self.player2Score = 0
+
+
         self.initBoard()
 
     def initBoard(self):
@@ -87,9 +96,6 @@ class Board(QFrame):  # base the board on a QFrame widget
         # printing x and y of each piece (it index)
         print("boardArray x and y:")
         print('\n'.join(['\t'.join([str(cell.get_x_and_y()) for cell in row]) for row in self.piecesArray]))
-
-    def mousePosToColRow(self, event):
-        '''convert the mouse click event to a row and column'''
 
     def squareWidth(self):
         '''returns the width of one square in the board'''
@@ -140,11 +146,10 @@ class Board(QFrame):  # base the board on a QFrame widget
         for row in self.piecesArray:
             for p in row:
                 p.setPiece(0)
-                # print("reset status", p.getPiece())
+                p.setLiberties(0)
 
         self.turn_counter = 1
-        print("------")
-        self.printBoardArray()
+
 
     def tryMove(self, newX, newY):
         '''tries to move a piece'''
@@ -194,18 +199,33 @@ class Board(QFrame):  # base the board on a QFrame widget
         return self.turn_counter
 
     def skip(self):
+        # on skip increment counter to move to the next turn
         self.turn_counter += 1
 
         # if skip occurs twice in a row
         if(self.skip_count == 1):
             skip_message = QMessageBox.question(self, "Game Over", "Game is over, Restart?")
-
-
+            # if response is yes reset game
             if skip_message == skip_message.Yes:
                 self.resetGame()
+            # if response is no quit game
             else:
                 QApplication.quit()
-
+        # increment skip count on each skip click
         self.skip_count += 1
+
+        # if black skipped add one two score of white as piece is given to white
+        if self.turn_counter % 2 == 0:
+            self.player2Score += 1
+            print(self.player2Score)
+            self.updatePlayer2ScoreSignal.emit(self.player2Score)
+        # if white skipped add one two score of white as piece is given to white
+        else:
+            self.player1Score += 1
+            print(self.player1Score)
+            self.updatePlayer1ScoreSignal.emit(self.player1Score)
+
+
+
 
 
