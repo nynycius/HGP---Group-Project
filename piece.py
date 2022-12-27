@@ -38,7 +38,7 @@ class Piece(QPushButton):
     def piece_color(self):
 
         # if the movement is not a self capture, stone can be placed
-        if self.suicede(self.getAdjacentPieces()):
+        if self.suicide(self.getAdjacentPieces()):
             # if piece is in a given state change to the next one
             # if the piece is blank it is allowed to change
             if self.status == 0:
@@ -104,7 +104,7 @@ class Piece(QPushButton):
 
         return self.adjacentPiece
 
-    def suicede(self, adjacent):  # pass list of adjacent positions to check movement is valid
+    def suicide(self, adjacent):  # pass list of adjacent positions to check movement is valid
 
         #  set dataStructure doesn't allow repetitive values, so if it len equals to 1, all elements are the same
         same_values = set(adjacent)
