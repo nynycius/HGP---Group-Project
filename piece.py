@@ -8,26 +8,28 @@ class Piece(QPushButton):
     NoPiece = 0
     White = 1
     Black = 2
-    Status = 0 # default to nopiece
-    liberties = 0 # default no liberties
+    status = 0  # default to nopiece
+    liberties = 0  # default no liberties
     x = -1
     y = -1
     icon = QIcon()
-    def __init__(self, board, x, y):  #constructor
+
+    def __init__(self, board, x, y):  # constructor
         super().__init__()
-        self.Status = 0
+        self.status = 0
         self.liberties = 0  # starting with 0 liberty as default, must set right liberty when placed
         self.x = x
         self.y = y
         #  comment out the next line to see button border
-        self.setStyleSheet("background-color: rgba(255,255,255,0);border: 0px; padding: 0px")  # background and border transparent
+        self.setStyleSheet(
+            "background-color: rgba(255,255,255,0);border: 0px; padding: 0px")  # background and border transparent
         self.setIcon(QIcon("./icons/blank.png"))  # must be changed to blank.png
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.pressed.connect(self.piece_color)
 
         self.board = board
 
-
+        self.adjacentPiece = []
 
     # Small test to change the icons, must be changed based on players turn if Status == 0 (blank) only
     def piece_color(self):
@@ -37,21 +39,27 @@ class Piece(QPushButton):
         # if piece is in a given state change to the next one
 
         # if the piece is blank it is allowed to change
-        if self.Status == 0:
+        if self.status == 0:
             if self.board.clicker() % 2 == 0:
                 self.setIcon(QIcon("./icons/black.png"))
-                self.Status = 1
+                self.status = 1
                 self.board.printBoardArray()
 
 
             else:
                 self.setIcon(QIcon("./icons/white.png"))
-                self.Status = 2
+                self.status = 2
 
-    def getPiece(self):# return PieceType
-        return self.Status
+        print(self.getAdjacentPieces())
 
-    def getLiberties(self): # return Liberties
+    def getPiece(self):  # return PieceType
+        return self.status
+
+    def setPiece(self, p):
+        self.status = p
+        self.setIcon(QIcon("./icons/blank.png"))
+
+    def getLiberties(self):  # return Liberties
         self.libs = self.liberties
         return self.libs
 
@@ -70,3 +78,13 @@ class Piece(QPushButton):
 
         self.setIconSize(QSize(self.height(), self.width()))
 
+    def getAdjacentPieces(self):
+        self.adjacentPiece = []
+        pieces_arr = self.board.piecesArray
+        if 0 <= self.x < len(pieces_arr)-1 and 0 <= self.y < len(pieces_arr)-1:
+            self.adjacentPiece.append(pieces_arr[self.x][self.y + 1].getPiece())
+            self.adjacentPiece.append(pieces_arr[self.x + 1][self.y].getPiece())
+            self.adjacentPiece.append(pieces_arr[self.x][self.y - 1].getPiece())
+            self.adjacentPiece.append(pieces_arr[self.x - 1][self.y].getPiece())
+
+        return self.adjacentPiece
