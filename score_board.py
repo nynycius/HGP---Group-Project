@@ -55,12 +55,17 @@ class ScoreBoard(QDockWidget):
         self.setWidget(self.mainWidget)
         self.show()
 
+
     def make_connection(self, board):
         '''this handles a signal sent from the board class'''
         # when the clickLocationSignal is emitted in board the setClickLocation slot receives it
         board.clickLocationSignal.connect(self.setClickLocation)
         # when the updateTimerSignal is emitted in the board the setTimeRemaining slot receives it
         board.updateTimerSignal.connect(self.setTimeRemaining)
+
+        board.updatePlayer1ScoreSignal.connect(self.setBlackScore)
+        board.updatePlayer2ScoreSignal.connect(self.setWhiteScore)
+
 
     @pyqtSlot(str)  # checks to make sure that the following slot is receiving an argument of the type 'int'
     def setClickLocation(self, clickLoc):
@@ -80,12 +85,11 @@ class ScoreBoard(QDockWidget):
         return self.blackScore
 
     def setBlackScore(self, score):
-        self.blackScore = score
-        self.label_pl1_score.setText(str(self.blackScore))
+        self.label_pl1_score.setText(str(score))
 
-    def getWhteScore(self):
+
+    def getWhiteScore(self):
         return self.whiteScore
 
-    def setWhtieScore(self, score):
-        self.whiteScore = score
-        self.label_pl2_score.setText(str(self.whiteScore))
+    def setWhiteScore(self, score):
+        self.label_pl2_score.setText(str(score))
