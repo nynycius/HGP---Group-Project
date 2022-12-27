@@ -9,6 +9,7 @@ class Go(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.setWindowIcon(QIcon("./icons/go.png"))
         self.board = Board(self)
         self.scoreBoard = ScoreBoard()
         self.initUI()
@@ -28,19 +29,19 @@ class Go(QMainWindow):
         rules = menu_bar.addMenu("Rules")
 
         # basic rules
-        basic_rules_action = QAction(QIcon(), "Basic Rules", self)
+        basic_rules_action = QAction(QIcon("./icons/basic.png"), "Basic Rules", self)
         basic_rules_action.setShortcut("ctrl+b")
         rules.addAction(basic_rules_action)  # add to the bar
         basic_rules_action.triggered.connect(self.rules)
 
         # suicide rule
-        suicide_rule_action = QAction(QIcon(), "Suicide Rule", self)
+        suicide_rule_action = QAction(QIcon("./icons/suicide.png"), "Suicide Rule", self)
         suicide_rule_action.setShortcut("ctrl+s")
         rules.addAction(suicide_rule_action)
         suicide_rule_action.triggered.connect(self.suicide)
 
         # Ko rule
-        KO_rule_action = QAction(QIcon(), "Ko Rules", self)
+        KO_rule_action = QAction(QIcon("./icons/KO.png"), "Ko Rules", self)
         KO_rule_action.setShortcut("ctrl+k")
         rules.addAction(KO_rule_action)
         KO_rule_action.triggered.connect(self.KO)

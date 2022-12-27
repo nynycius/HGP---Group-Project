@@ -25,30 +25,31 @@ class Piece(QPushButton):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.pressed.connect(self.piece_color)
 
+        # create a board instance to verifiy turn
         self.board = board
 
 
 
     # Small test to change the icons, must be changed based on players turn if Status == 0 (blank) only
     def piece_color(self):
-        #
-        # self.board.player
+
         print(f"pressed: {self.getPiece()}, x and y: {self.get_x_and_y()}")
         # if piece is in a given state change to the next one
-
         # if the piece is blank it is allowed to change
         if self.Status == 0:
+            # change the button color based on how player is playing
             if self.board.clicker() % 2 == 0:
                 self.setIcon(QIcon("./icons/black.png"))
                 self.Status = 1
-                self.board.printBoardArray()
-
 
             else:
                 self.setIcon(QIcon("./icons/white.png"))
                 self.Status = 2
 
-    def getPiece(self):# return PieceType
+            # print board state after each play
+            self.board.printBoardArray()
+
+    def getPiece(self):# return piece value
         return self.Status
 
     def getLiberties(self): # return Liberties
@@ -66,7 +67,7 @@ class Piece(QPushButton):
     def get_x_and_y(self):
         return self.x, self.y
 
-    def resizeEvent(self, event):
+    def resizeEvent(self, event):  # guarantee that icon resizes based on the button size
 
         self.setIconSize(QSize(self.height(), self.width()))
 
