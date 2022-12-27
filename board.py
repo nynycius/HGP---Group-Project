@@ -203,6 +203,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         if(self.skip_count == 1):
             skip_message = QMessageBox.question(self, "Game Over", "Game is over, Restart?")
 
+
             if skip_message == QMessageBox.Yes:
                 self.resetGame()
             else:
