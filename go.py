@@ -42,3 +42,7 @@ class Go(QMainWindow):
         self.setWindowTitle('Go')
         self.show()
 
+        # -------------Game Logic-----------
+        self.scoreBoard.skip_button.clicked.connect(self.board.skip)
+        self.scoreBoard.reset_button.clicked.connect(self.board.resetGame)
+
